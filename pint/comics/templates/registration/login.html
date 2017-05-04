@@ -1,12 +1,36 @@
 
-{% block content %}
-<h2>Login</h2>
-<form method="post">
-	{% csrf_token %}
-	{{ form.as_p }}
-	<button type="submit">Login</button>
-</form>
-<br>
+<html>
+<head>
+<title>Login de usuarios</title>
+</head>
+<body>
+<h1>Login</h1>
+{% if form.has_errors %}
+<p>El usuario o contraseña son incorrectos. Por favor intente de nuevo.</p>
+{% endif %}
+<form method="post" action=".">
+<p><label for="id_username">Usuario:</label>
+{{ form.username }}</p>
+<p><label for="id_password">Contraseña:</label>
+{{ form.password }}</p>
+<input type="hidden" name="next" value="/" />
+<input type="submit" value="login" />
+{% csrf_token %}
 <p><strong>-- OR --</strong></p>
 <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google+</a><br>
-{% endblock %}
+</form>
+</body>
+</html>
+
+
+<!--{% block content %}-->
+<!--<h2>Login</h2>-->
+<!--<form method="post">-->
+<!--	{% csrf_token %}-->
+<!--	{{ form.as_p }}-->
+<!--	<button type="submit">Login</button>-->
+<!--</form>-->
+<!--<br>-->
+<!--<p><strong>-- OR --</strong></p>-->
+<!--<a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google+</a><br>-->
+<!--{% endblock %}-->
