@@ -1,4 +1,4 @@
-
+{% extends "base.html" %}
 {% block content %}
   <h2>Sign up</h2>
   <form method="post">
@@ -16,9 +16,8 @@
       </p>
     {% endfor %}
     <button type="submit">Sign up</button>
+    {% csrf_token %}
+    <p><strong>-- OR --</strong></p>
+    <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google+</a><br>
   </form>
 {% endblock %}
-
-
-
-
