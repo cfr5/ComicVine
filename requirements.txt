@@ -1,0 +1,10 @@
+Django==1.11
+django-registration==2.2
+numpy==1.12.0
+oauth2==1.9.0.post1
+oauthlib==2.0.2
+pandas==0.19.2
+requests==2.13.0
+requests-oauthlib==0.8.0
+social-auth-app-django==1.1.0
+social-auth-core==1.2.0
