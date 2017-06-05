@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Configuración{% endblock %}
+{% block content %}
+
+<div class="container">
+  <h2></h2>
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#micuenta">Mi cuenta</a></li>
+    <li><a data-toggle="tab" href="#loc">Localización</a></li> 
+  </ul>
+
+  <div class="tab-content">
+    <div id="micuenta" class="tab-pane fade in active">
+      <h3>Mi cuenta</h3>
+      <p>
+	<form method="post">
+		{% csrf_token %}
+		</div>
+		    <div class="form-group">
+		      <label class="control-label col-sm-2" for="pwd">New password:</label>
+		      <div class="col-sm-10">          
+			<input type="password" class="form-control" id="pwd1" placeholder="Enter password" name="pwd1">
+		      </div>
+		 </div>
+		</div>
+		    <div class="form-group">
+		      <label class="control-label col-sm-2" for="pwd">Repeat new password:</label>
+		      <div class="col-sm-10">          
+			<input type="password" class="form-control" id="pwd2" placeholder="Enter password" name="pwd2">
+		      </div>
+		 </div>
+		<button type="submit">Cambiar</button>
+		{% csrf_token %}
+	</form>
+      </p>
+    </div>
+    <div id="loc" class="tab-pane fade">
+      <h3>Localización de tienda mas próxima</h3>
+      <p>GPS</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
