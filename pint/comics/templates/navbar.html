@@ -10,8 +10,14 @@
 			 <a class="navbar-brand" href="/comics">Comics</a>
 		</div>
 		<ul class="nav navbar-nav navbar-right">
-			<li><a href="/comics/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-			<li><a href="/comics/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			{% if user.is_authenticated %}
+				<li><a href="/comics/config"><span class="glyphicon glyphicon-cog"></span> Config</a></li>
+				<li><a href="/comics/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
+			{% else %}
+
+				<li><a href="/comics/register"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+				<li><a href="#" data-toggle="modal" data-target="#login-modal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+			{% endif %}
 		</ul>
 
 		<form class="navbar-form navbar-right">
