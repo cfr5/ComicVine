@@ -19,7 +19,7 @@ function createMarker(place) {
       position: place.geometry.location,
     }),
     content = '<strong>' + place.name + '</strong><br>' + place.vicinity;
-
+    marker.setIcon('http://icons.iconarchive.com/icons/omercetin/pixelophilia2/32/comic-book-icon.png');
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.setContent(content);
     infowindow.open(map, this);
@@ -51,6 +51,7 @@ function processLocation(position) {
     infowindow.setContent('This is your current location!<br>We\'re now showing you all the Libraries in a 8 km radius');
     infowindow.open(map, this);
   });
+  marker.setIcon('http://icons.iconarchive.com/icons/mattahan/ultrabuuf/48/Comics-Batman-Joker-icon.png');
 
   // Open the window when the app has loaded
   google.maps.event.trigger(marker, 'click', function() {

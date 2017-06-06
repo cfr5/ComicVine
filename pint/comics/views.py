@@ -36,19 +36,7 @@ def register(request):
 @login_required()
 def account(request):
     return render(request, 'config/account.html')
-'''
+
 @login_required()
-def config(request):
-         if request.method=='POST':
-            form=CambioContra(request.POST)
-            if form.is_valid():
-                  password1=form.cleaned_data['paswword1']
-                  password2=form.cleaned_data['paswword2']
-                  if user.password2==password1:
-                        user.password=user.password1
-			messages.success(request, 'Contraseña cambiada correctamente')
-			return redirect('config/config.html')
-                  else:
-                         message.error(request, 'Contraseñas diferentes')
-                  user.save()
-                 '''
+def shops(request):
+    return render(request, 'config/shops.html')
