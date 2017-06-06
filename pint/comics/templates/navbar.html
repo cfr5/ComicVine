@@ -11,7 +11,19 @@
 		</div>
 		<ul class="nav navbar-nav navbar-right">
 			{% if user.is_authenticated %}
-				<li><a href="/comics/config"><span class="glyphicon glyphicon-cog"></span> Config</a></li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+						<span class="glyphicon glyphicon-cog"></span> Config 
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/comics/shops"><span class="glyphicon glyphicon-globe"></span> Nerby Shops</a></li>
+						<li><a href="/comics/account"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
+						{% if user.is_superuser %}
+							<li><a href="/comics/statistics"><span class="glyphicon glyphicon-stats"></span> Statistics</a></li>
+						{% endif %}
+					</ul>
+				</li>
 				<li><a href="/comics/logout"><span class="glyphicon glyphicon-log-out"></span> Log out</a></li>
 			{% else %}
 
