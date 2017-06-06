@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>My Account</h2>
+	<p>
+      	<form method="post">
+      		{% csrf_token %}
+      		<label class="control-label col-sm-2" for="pwd1">New password:</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="pwd1" placeholder="Enter password" name="pwd1">
+		</div>
+      		
+      		<label class="control-label col-sm-2" for="pwd2">Repeat new password:</label>
+      		<div class="col-sm-10">
+			<input type="password" class="form-control" id="pwd2" placeholder="Enter password" name="pwd2">
+      		</div>
+      		
+      		<button type="submit">Cambiar</button>
+      		{% csrf_token %}
+      	</form>
+      </p>
+	
+
+
+</div>
+
+{% endblock %}

@@ -34,8 +34,8 @@ def register(request):
 
 
 @login_required()
-def config(request):
-    return render(request, 'config/config.html')
+def account(request):
+    return render(request, 'config/account.html')
 '''
 @login_required()
 def config(request):
