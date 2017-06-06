@@ -48,7 +48,7 @@ def config(request):
                         user.password=user.password1
 			messages.success(request, 'Contraseña cambiada correctamente')
 			return redirect('config/config.html')
-                  else:         
+                  else:
                          message.error(request, 'Contraseñas diferentes')
                   user.save()
                  '''

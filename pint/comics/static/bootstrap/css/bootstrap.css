@@ -6773,14 +6773,14 @@ button.close {
     margin-top: 100px;
     line-height: 300%;
 }
-	
+
 .omb_login .omb_socialButtons a {
-	color: white; // In yourUse @body-bg 
+	color: white; // In yourUse @body-bg
 	opacity:0.9;
 }
 .omb_login .omb_socialButtons a:hover {
     color: white;
-	opacity:1;    	
+	opacity:1;
 }
 .omb_login .omb_socialButtons .omb_btn-facebook {background: #3b5998;}
 .omb_login .omb_socialButtons .omb_btn-twitter {background: #00aced;}
@@ -6811,7 +6811,7 @@ button.close {
 	background-color: white;
 	width: 3em;
 	text-align: center;
-}			
+}
 
 .omb_login .omb_loginForm .input-group.i {
 	width: 2em;
@@ -6821,15 +6821,15 @@ button.close {
     color: red;
 }
 
-	
+
 @media (min-width: 768px) {
     .omb_login .omb_forgotPwd {
         text-align: right;
 		margin-top:10px;
- 	}		
+ 	}
 }
 
-#id_username,#id_email,#id_password,#id_password1,#id_password2 {	
+#id_username,#id_email,#id_password,#id_password1,#id_password2 {
   display: block;
   width: 100%;
   height: 34px;
@@ -6849,3 +6849,10 @@ button.close {
 }
 
 /*# sourceMappingURL=bootstrap.css.map */
+#map {
+  height: 300px;
+  left: 50%;
+  margin: -225px 0 0 -350px;
+  top: 50%;
+  width: 500px;
+}

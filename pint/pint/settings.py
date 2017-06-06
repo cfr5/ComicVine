@@ -89,6 +89,7 @@ LOGIN_REDIRECT_URL = 'index'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1035917129362-39g730g3q33ouc9hna8i0p5r1m80n201.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'qUoU-bjsnWRjhAYUoNn25ocl'
 
+GMAPS_KEY = 'AIzaSyC3_NVZ8zYChBDpwF-9yE_AMW6o3UtRdQw'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
