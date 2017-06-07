@@ -28,3 +28,9 @@ class Author (models.Model):
     comics = models.ManyToManyField(Comic, verbose_name="list of comics")
     def __unicode__(self):
         return self.author_id
+
+class UserFollows (models.Model):
+    user_id = models.CharField(max_length=50,primary_key = 'true')
+    characters = models.ManyToManyField(Character, verbose_name="list of characters")
+    comics = models.ManyToManyField(Comic, verbose_name="list of comics")
+    authors = models.ManyToManyField(Author, verbose_name="list of authors")
