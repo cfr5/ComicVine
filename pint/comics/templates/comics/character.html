@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Character{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="fb-profile">
+        <img align="left" class="fb-image-lg" src="http://www.zoom-comics.com/wp-content/uploads/sites/36/2011/01/Widescreen-Comic-Heroes.jpg" alt="Profile image example"/>
+        <img align="left" class="fb-image-profile thumbnail" src="http://lorempixel.com/180/180/people/9/" alt="Profile image example"/>
+        <div class="fb-profile-text">
+            <h1>Eli Macy</h1>
+
+        </div>
+    </div>
+  </div>
+</div> <!-- /container fluid-->
+<div class="container">
+  <div class="col-sm-8">
+
+      <div data-spy="scroll" class="tabbable-panel">
+        <div class="tabbable-line">
+          <ul class="nav nav-tabs ">
+            <li class="active">
+              <a href="#tab_default_1" data-toggle="tab">
+              Origin </a>
+            </li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab_default_1">
+
+              <p>
+                ORIGEN AQUÍ
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  <div class="col-sm-4">
+   <div class="panel panel-default">
+    <div class="menu_title">
+       General Information
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-12">
+                 <div class="form-group">
+                     <label for="email">Super Name:</label>
+                      <p> SUPER NOMBRE AQUI</p>
+                 </div>
+                 <div class="form-group">
+                     <label for="email">Real Name:</label>
+                      <p> NOMBRE REAL AQUI</p>
+                 </div>
+                 <div class="form-group">
+                     <label for="email">Aliases:</label>
+                      <p> ALIAS AQUI</p>
+                 </div>
+                 <div class="form-group">
+                     <label for="email">Publisher:</label>
+                      <p> EDITORIAL AQUI</p>
+                 </div>
+                  <div class="form-group">
+                      <label for="email">Gender:</label>
+                      <p> GÉNERO AQUI</p>
+                  </div>
+                  <div class="form-group">
+                      <label for="email">Character Type:</label>
+                      <p> HUMAN MUTANT INHUMAN...</p>
+                  </div>
+                   <div class="form-group">
+                      <label for="email">Powers:</label>
+                      <p> PADRE LO DE LOS PODERES </p>
+                   </div>
+
+
+                <button type="submit" class="btn btn-danger btn-block">Add to my list</button>
+            </div>
+        </div>
+    </div>
+</div>
+  </div>
+</div>
+{% endblock %}
