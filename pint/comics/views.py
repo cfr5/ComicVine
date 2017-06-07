@@ -7,12 +7,14 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 
 from comics.forms import UserCreationForm
+
+from comics.models import Comic, Character, Author, UserFollows
+
 # Create your views here.
 @login_required()
 def index(request):
-    return render(request, 'comics/index.html')
-
-
+    context = {'comics': Comic.objects.all(),'characters': Character.objects.all(),'authors': Author.objects.all()}
+    return render(request, 'comics/index.html', context)
 
 def register(request):
     if request.method == 'POST':
