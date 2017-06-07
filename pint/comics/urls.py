@@ -14,6 +14,6 @@ urlpatterns = [
     url(r'^shops/', views.shops, name='shops'),
     url(r'^statistics/', views.statistics, name='statistics'),
     url(r'^comic/(?P<comic_id>\d+)/$',views.comic, name='comic'),
-    url(r'^author/', views.author, name = 'auhor'),
+    url(r'^author/(?P<author_id>\d+)/$',views.author, name='author'),
     url(r'^character/(?P<character_id>\d+)/$',views.character, name='character'),
 ]

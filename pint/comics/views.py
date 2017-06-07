@@ -52,8 +52,9 @@ def comic(request, comic_id):
     return render(request, 'comics/comic.html',context)
 
 @login_required()
-def author(request):
-    return render(request, 'comics/author.html')
+def author(request, author_id):
+    context = {'author': Author.objects.get(pk=author_id)}
+    return render(request, 'comics/author.html',context)
 
 @login_required()
 def character(request, character_id):

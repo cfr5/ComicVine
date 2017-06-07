@@ -10,7 +10,7 @@
         <img align="left" class="fb-image-lg" src="http://comicsalliance.com/files/2010/10/writer-artist-comics.jpg" alt="Profile image example"/>
         <img align="left" class="fb-image-profile thumbnail" src="http://lorempixel.com/180/180/people/9/" alt="Profile image example"/>
         <div class="fb-profile-text">
-            <h1>Eli Macy</h1>
+            <h1>{{author.name}}</h1>
 
         </div>
     </div>
@@ -35,13 +35,15 @@
             <div class="tab-pane active" id="tab_default_1">
 
               <p>
-                BIOGRAFÍA AQUÍ
+                {{author.biography}}
               </p>
 
             </div>
             <div class="tab-pane" id="tab_default_2">
               <p>
-                COMICS AQUÍ
+                {{author.comics}}
+
+
               </p>
             </div>
           </div>
@@ -59,31 +61,27 @@
             <div class="col-lg-12">
                  <div class="form-group">
                      <label for="email">Earth Name:</label>
-                      <p> NOMBRE AQUI</p>
+                      <p> {{author.name}}</p>
                  </div>
                   <div class="form-group">
                       <label for="email">Gender:</label>
-                      <p> GENERO AQUI</p>
+                      <p> {{author.gender}}</p>
                   </div>
                   <div class="form-group">
                       <label for="email">Date of Birth:</label>
-                      <p> FECHA AQUI</p>
+                      <p> {{author.birth_date}}</p>
                   </div>
-                   <div class="form-group">
-                      <label for="email">Death:</label>
-                      <p> YES OR NO </p>
-                   </div>
                     <div class="form-group">
                       <label for="email">Town:</label>
-                      <p> CIUDAD AQUI</p>
+                      <p> {{author.town}}</p>
                     </div>
                     <div class="form-group">
                       <label for="email">Country:</label>
-                      <p> PAÍS AQUÍ </p>
+                      <p> {{author.country}}</p>
                     </div>
                      <div class="form-group">
                       <label for="email">Alias:</label>
-                      <p> Alias o no alias?</p>
+                      <p> {{author.aliases}}</p>
                     </div>
 
                 <button type="submit" class="btn btn-danger btn-block">Add to my list</button>
