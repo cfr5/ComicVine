@@ -6851,9 +6851,7 @@ button.close {
 /*# sourceMappingURL=bootstrap.css.map */
 #map {
   height: 500px;
-  left: 50%;
-  margin: -225px 0 0 -350px;
-  position: absolute;
-  top: 50%;
+  margin:50px auto;
+  position: relative;
   width: 700px;
 }
