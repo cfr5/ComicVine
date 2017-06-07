@@ -39,3 +39,9 @@ def account(request):
 @login_required()
 def shops(request):
     return render(request, 'config/shops.html')
+
+
+
+@login_required()
+def statistics(request):
+    return render(request, 'config/statistics.html')

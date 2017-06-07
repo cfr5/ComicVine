@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^register/', views.register, name='register'),
     url(r'^account/', views.account, name='account'),
-    url(r'^shops/', views.shops, name='shops')
+    url(r'^shops/', views.shops, name='shops'),
+    url(r'^statistics/', views.statistics, name='statistics'),
 ]
