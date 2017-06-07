@@ -13,4 +13,8 @@ urlpatterns = [
     url(r'^account/', views.account, name='account'),
     url(r'^shops/', views.shops, name='shops'),
     url(r'^statistics/', views.statistics, name='statistics'),
+    url(r'^comic/', views.comic, name = 'comic'),
+    url(r'^author/', views.author, name = 'auhor'),
+    url(r'^character/', views.character, name = 'character'),
+    #url(r'^(?P<product_id>\d+)/$',views.detail, name='detail'),
 ]

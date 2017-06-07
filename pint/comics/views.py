@@ -40,8 +40,18 @@ def account(request):
 def shops(request):
     return render(request, 'config/shops.html')
 
-
-
 @login_required()
 def statistics(request):
     return render(request, 'config/statistics.html')
+
+@login_required()
+def comic(request):
+    return render(request, 'comics/comic.html')
+
+@login_required()
+def author(request):
+    return render(request, 'comics/author.html')
+
+@login_required()
+def character(request):
+    return render(request, 'comics/character.html')
