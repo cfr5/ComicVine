@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Statistics{% endblock %}
+{% block content %}
+
+
+
+
+<div class="container-fluid">
+	<div class="row content">
+    	<div class="col-sm-3 sidenav">
+	<h4>Statistics</h4>
+	<ul class="nav nav-tabs nav-stacked">
+		<li class="active"><a data-toggle="tab" href="#user">Users</a></li>
+		<li><a data-toggle="tab" href="#com">Comics</a></li>
+		<li><a data-toggle="tab" href="#aut">Authors</a></li>
+		<li><a data-toggle="tab" href="#edi">Editorials</a></li>
+	</ul>
+</div>
+	<div class="col-sm-9">
+	<div class="tab-content">
+		   
+			<div id="user" class="tab-pane fade in active">
+				<h3>Users</h3>
+			</div>
+
+			<div id="com" class="tab-pane fade">
+				<h3>Comics</h3>
+				<p></p>
+			</div>
+			<div id="aut" class="tab-pane fade">
+				<h3>Authors</h3>
+			<p></p>
+			</div>
+				<div id="edi" class="tab-pane fade">
+				<h3>Editorials</h3>
+			<p></p>
+			</div>
+	</div>
+	
+</div>
+</div>
+    
+
+
+
+
+
+{% endblock %}
