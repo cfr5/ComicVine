@@ -13,8 +13,7 @@ urlpatterns = [
     url(r'^account/', views.account, name='account'),
     url(r'^shops/', views.shops, name='shops'),
     url(r'^statistics/', views.statistics, name='statistics'),
-    url(r'^comic/', views.comic, name = 'comic'),
+    url(r'^comic/(?P<comic_id>\d+)/$',views.comic, name='comic'),
     url(r'^author/', views.author, name = 'auhor'),
-    #url(r'^character/', views.character, name = 'character'),
     url(r'^character/(?P<character_id>\d+)/$',views.character, name='character'),
 ]

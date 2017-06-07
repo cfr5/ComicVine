@@ -47,8 +47,9 @@ def statistics(request):
     return render(request, 'config/statistics.html')
 
 @login_required()
-def comic(request):
-    return render(request, 'comics/comic.html')
+def comic(request, comic_id):
+    context = {'comic': Comic.objects.get(pk=comic_id)}
+    return render(request, 'comics/comic.html',context)
 
 @login_required()
 def author(request):
