@@ -81,6 +81,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
 )
 
 LOGIN_URL = 'login'
@@ -92,6 +93,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'qUoU-bjsnWRjhAYUoNn25ocl'
 
 SOCIAL_AUTH_FACEBOOK_KEY = '1882119898695879'
 SOCIAL_AUTH_FACEBOOK_SECRET = '65187772c1d314bbd7ed2b6499f85998'
+
+SOCIAL_AUTH_TWITTER_KEY = 'i5gX1RdnBpPULnd8BSSO7bUsc'
+SOCIAL_AUTH_TWITTER_SECRET = 'VoSSuzLFWdhm4oK7NVE1d3RiAsVrniygqS0CXfjKYYyaIG8CeI'
 
 GMAPS_KEY = 'AIzaSyC3_NVZ8zYChBDpwF-9yE_AMW6o3UtRdQw'
 # Database
