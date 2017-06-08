@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from pandas import DataFrame
 import pandas as pd
 import numpy as np
+from django.db import connection
 
 from comics.forms import UserCreationForm
 
@@ -77,12 +78,18 @@ def test(request):
 @login_required()
 def statistics(request):
 	
-	fig=plt
-	plt.plot([1,2,3,4])
-	plt.ylabel('some numbers')
-	fig.savefig('comics/static/statistics/table.png')
-	return render(request, 'config/statistics.html')
+	
+	characters= Character.objects.all()
+	query_characters = str(characters.query)
+	df_characters = pd.read_sql_query(query_characters, connection)
+	gender_characters=df_characters.groupby('gender').count()['character_id']
+	
+	p_characters_gender= gender_characters.plot(legend=False,kind='barh',figsize=(8,3))
 
+	p_characters_gender.get_figure().savefig('comics/static/statistics/characters_gender.png')
+
+
+	return render(request, 'config/statistics.html')
 
 
 
