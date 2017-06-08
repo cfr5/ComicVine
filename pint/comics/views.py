@@ -78,15 +78,49 @@ def test(request):
 @login_required()
 def statistics(request):
 	
-	
+	#Characters
 	characters= Character.objects.all()
 	query_characters = str(characters.query)
 	df_characters = pd.read_sql_query(query_characters, connection)
+	#Genero
 	gender_characters=df_characters.groupby('gender').count()['character_id']
 	
 	p_characters_gender= gender_characters.plot(legend=False,kind='barh',figsize=(8,3))
 
 	p_characters_gender.get_figure().savefig('comics/static/statistics/characters_gender.png')
+	
+	#Type
+	type_characters= df_characters.groupby('character_type').count()['character_id']
+	p_characters_type= type_characters.plot(legend=False,kind='barh',figsize=(8,3))
+	p_characters_type.get_figure().savefig('comics/static/statistics/characters_type.png')
+
+	#Publisher
+	publisher_characters= df_characters.groupby('publisher').count()['character_id']
+	p_characters_publisher= publisher_characters.plot(legend=False,kind='barh',figsize=(8,3))
+	p_characters_publisher.get_figure().savefig('comics/static/statistics/characters_publisher.png')
+	
+	#Powers
+	powers_characters= df_characters.groupby('powers').count()['character_id']
+	p_characters_powers= powers_characters.plot(legend=False,kind='barh',figsize=(8,3))
+	p_characters_powers.get_figure().savefig('comics/static/statistics/characters_powers.png')
+
+
+	#Authors
+	authors= Author.objects.all()
+	query_authors = str(authors.query)
+	df_authors = pd.read_sql_query(query_authors, connection)
+
+	#Genero
+	gender_authors=df_authors.groupby('gender').count()['author_id']
+	p_authors_gender= gender_authors.plot(legend=False,kind='barh',figsize=(8,3))
+	p_authors_gender.get_figure().savefig('comics/static/statistics/authors_gender.png')
+	
+	
+	#Genero
+	country_authors=df_authors.groupby('country').count()['author_id']
+	p_authors_country= country_authors.plot(legend=False,kind='barh',figsize=(8,3))
+	p_authors_country.get_figure().savefig('comics/static/statistics/authors_country.png')
+
 
 
 	return render(request, 'config/statistics.html')
