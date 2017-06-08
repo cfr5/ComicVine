@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 from comics.forms import UserCreationForm
 
-from comics.models import Comic, Character, Author, UserFollows
+from comics.models import Comic, Character, Author, CharacterFollows
 
 # Create your views here.
 @login_required()
@@ -60,3 +60,12 @@ def author(request, author_id):
 def character(request, character_id):
     context = {'character': Character.objects.get(pk=character_id)}
     return render(request, 'comics/character.html',context)
+
+def test(request):
+    #c= Character(character_id=1,super_name='Mr Chaman',real_name='Ignatius',aliases= 'pollito',publisher='ser',gender='male',character_type='human',powers='all',image='http://4www.ecestaticos.com/imagestatic/clipping/491/e81/491e810bc7d83a6dbe8d51a5948d55b4/la-buena-mierda-fascista-de-ignatius-farray-en-la-cama-con-la-bestia-parda-del-humor.jpg',origin='Canarias')
+    #c.save()
+    d=CharacterFollows(character=Character.objects.get(pk=1),user_id='oscar')
+    d.save()
+    print((CharacterFollows.objects.get(user_id='oscar')).follows)
+
+    return redirect('index')

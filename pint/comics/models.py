@@ -53,18 +53,18 @@ class UserFollows (models.Model):
 
 class ComicFollows(models.Model):
     follows_id = models.AutoField(primary_key=True)
-    comic = models.OneToOneField(Comic)
+    comic = models.ForeignKey(Comic, unique=False)
     user_id = models.CharField(max_length=50)
     follows = models.DateTimeField(auto_now=True)
 
 class AuthorFollows(models.Model):
     follows_id = models.AutoField(primary_key=True)
-    author = models.OneToOneField(Author)
+    author = models.ForeignKey(Author, unique=False)
     user_id = models.CharField(max_length=50)
     follows = models.DateTimeField(auto_now=True)
 
 class CharacterFollows(models.Model):
     follows_id = models.AutoField(primary_key=True)
-    character = models.OneToOneField(Character)
+    character = models.ForeignKey(Character, unique=False)
     user_id = models.CharField(max_length=50)
     follows = models.DateTimeField(auto_now=True)
