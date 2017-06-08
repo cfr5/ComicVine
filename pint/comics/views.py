@@ -5,6 +5,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+import matplotlib.pyplot as plt
+from pandas import DataFrame
+import pandas as pd
+import numpy as np
 
 from comics.forms import UserCreationForm
 
@@ -42,9 +46,6 @@ def account(request):
 def shops(request):
     return render(request, 'config/shops.html')
 
-@login_required()
-def statistics(request):
-    return render(request, 'config/statistics.html')
 
 @login_required()
 def comic(request, comic_id):
@@ -69,3 +70,27 @@ def test(request):
     print((CharacterFollows.objects.get(user_id='oscar')).follows)
 
     return redirect('index')
+
+
+
+
+@login_required()
+def statistics(request):
+	
+	fig=plt
+	plt.plot([1,2,3,4])
+	plt.ylabel('some numbers')
+	fig.savefig('comics/static/statistics/table.png')
+	return render(request, 'config/statistics.html')
+
+
+
+
+
+
+
+
+
+
+
+
