@@ -32,12 +32,12 @@ def register(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             raw_password = form.cleaned_data.get('password1')
-	    raw_password2 = form.cleaned_data.get('password2')
-	    if (raw_password==raw_password2):
-            	user = authenticate(username=username, email=email, password=raw_password)
-            	login(request, user)
-            	return redirect('index')
-	    else: message.error(request, 'Contraseñas deferentes')
+            raw_password2 = form.cleaned_data.get('password2')
+            if (raw_password==raw_password2):
+                user = authenticate(username=username, email=email, password=raw_password)
+                login(request, user)
+                return redirect('index')
+            else: message.error(request, 'Contraseñas deferentes')
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -53,10 +53,35 @@ def shops(request):
 
 @login_required()
 def comic(request, comic_id):
+    follows = ComicFollows.objects.filter(comic=comic_id,user_id=request.user).count()
+
     if Comic.objects.filter(pk=comic_id).count():
-        context = {'comic': Comic.objects.get(pk=comic_id)}
-        return render(request, 'comics/comic.html',context)
+        return render(request, 'comics/comic.html',{'comic': Comic.objects.get(pk=comic_id), 'follows': follows})
     else:
+        headers = {'User-Agent': 'PintGrupo10'}
+        response = requests.get('https://comicvine.gamespot.com/api/issue/4000-'+comic_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY}, headers=headers)
+        if response.status_code == 200:
+            son = json.loads(response.text)
+            results = son['results']
+            if results:
+                comic_id=results['id']
+                issue_number=results['issue_number']
+                if not issue_number:
+                    issue_number= 0
+                title=results['name']
+                if not title:
+                    title= "Title not available"
+                image=results['image']['super_url']
+                store_date=results['cover_date']
+                if not store_date:
+                    store_date= "0000-00-00"
+                synopsis=results['description']
+                if not synopsis:
+                    synopsis = "Synopsis not available"
+                Comic(comic_id,issue_number,title,image,store_date,synopsis).save()
+
+                return render(request, 'comics/comic.html', {'comic': Comic.objects.get(pk=comic_id), 'follows': follows})
+
         return render(request, 'comics/404.html')
 
 @login_required()
@@ -75,22 +100,8 @@ def character(request, character_id):
     else:
         return render(request, 'comics/404.html')
 
-def test(request):
-    #c= Character(character_id=1,super_name='Mr Chaman',real_name='Ignatius',aliases= 'pollito',publisher='ser',gender='male',character_type='human',powers='all',image='http://4www.ecestaticos.com/imagestatic/clipping/491/e81/491e810bc7d83a6dbe8d51a5948d55b4/la-buena-mierda-fascista-de-ignatius-farray-en-la-cama-con-la-bestia-parda-del-humor.jpg',origin='Canarias')
-    #c.save()
-    d=CharacterFollows(character=Character.objects.get(pk=1),user_id='oscar')
-    d.save()
-    print((CharacterFollows.objects.get(user_id='oscar')).follows)
-
-    return redirect('index')
-
-
-
-
 @login_required()
 def statistics(request):
-
-
     #Characters
     characters= Character.objects.all()
     query_characters = str(characters.query)
@@ -223,6 +234,7 @@ def statistics(request):
     return render(request, 'config/statistics.html')
 
 
+
 @login_required()
 def search(request):
     query = request.GET['query']
@@ -244,7 +256,9 @@ def followcomic(request, comic_id):
         comic = Comic.objects.get(pk=comic_id)
         if not ComicFollows.objects.filter(comic=comic_id,user_id=request.user):
             ComicFollows(comic=comic,user_id=request.user).save()
-        return render(request, 'comics/comic.html')
+        else:
+            ComicFollows.objects.filter(comic=comic_id,user_id=request.user).delete()
+        return redirect('comic', comic_id)
     else:
         return render(request, 'comics/404.html')
 

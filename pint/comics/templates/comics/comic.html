@@ -31,7 +31,7 @@
             <div class="tab-pane active" id="tab_default_1">
 
               <p>
-                {{comic.synopsis}}
+                {% autoescape off %}{{comic.synopsis}}{% endautoescape %}
               </p>
 
             </div>
@@ -61,8 +61,14 @@
                       <label for="email">In store date:</label>
                       <p> {{comic.store_date}}</p>
                   </div>
+		<form action="/comics/followcomic/{{ comic.comic_id }}">
+			{% if follows %}
+                		<input type="submit" class="btn btn-danger btn-block" value="Remove from my list"/>
+			{% else %}
+                		<input type="submit" class="btn btn-primary btn-block" value="Add to my list"/>
+			{% endif %}
 
-                <button type="submit" class="btn btn-danger btn-block">Add to my list</button>
+		</form>
             </div>
         </div>
     </div>

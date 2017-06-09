@@ -14,7 +14,13 @@
 		{% for result in results %}
 			<article class="search-result row">
 				<div class="col-xs-12 col-sm-12 col-md-3">
-					<a href="#" title="Lorem ipsum" class="thumbnail"><img src="{{ result.image.thumb_url }}" alt="Lorem ipsum" /></a>
+					{% if query_type == 'issue' %}
+						<a href="/comics/comic/{{ result.id }}" title="Lorem ipsum" class="thumbnail"><img src="{{ result.image.thumb_url }}" alt="Lorem ipsum" /></a>
+					{% elif query_type == 'person' %}
+						<a href="/comics/author/{{ result.id }}" title="Lorem ipsum" class="thumbnail"><img src="{{ result.image.thumb_url }}" alt="Lorem ipsum" /></a>
+					{% elif query_type == 'character' %}
+						<a href="/comics/character/{{ result.id }}" title="Lorem ipsum" class="thumbnail"><img src="{{ result.image.thumb_url }}" alt="Lorem ipsum" /></a>
+					{% endif %}
 				</div>
 				<div class="col-xs-12 col-sm-12 col-md-2">
 					<ul class="meta-search">
@@ -37,7 +43,13 @@
 					</ul>
 				</div>
 				<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-					<h4><a href="#" title="">{{ result.name}} #{{ result.issue_number }} </a></h4>
+					{% if query_type == 'issue' %}
+						<h4><a href="/comics/comic/{{ result.id }}" title="Lorem ipsum">{{ result.name}} #{{ result.issue_number }}</a></h4>
+					{% elif query_type == 'person' %}
+						<h4><a href="/comics/author/{{ result.id }}" title="Lorem ipsum">{{ result.name }}</a></h4>
+					{% elif query_type == 'character' %}
+						<h4><a href="/comics/character/{{ result.id }}" title="Lorem ipsum">{{ result.name }}</a></h4>
+					{% endif %}
 					{% if result.description %}
 						{% autoescape off %}{{ result.description|slice:"0:400" }}{% endautoescape %}
 					{% endif %}
