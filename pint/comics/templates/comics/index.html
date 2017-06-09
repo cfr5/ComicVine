@@ -12,28 +12,34 @@
 
       <div class="tab-content">
 	      <div id="comics" class="tab-pane fade in active">
-		      <div class="row">
-			      <div class="thumbnails">	    
-				      {% for comic in comics %}            
-				      <div class="col-md-4">
-					      <div class="thumbnail">
-						        <a href="/comics/comic/{{ comic.comic_id }}">
-						     		 <img src="{{ comic.image }}" width="150x150" alt="ALT NAME">
-							</a>
-							<div class="caption">
-								<a href="/comics/comic/{{ comic.comic_id }}" style="color: inherit">
-									<h3>{{ comic.title }}  #{{ comic.issue_number }}</h3>
-								</a>
-							      	<p align="center">
-							      	<a href="#" class="btn btn-primary btn-block">Añadir</a></p>
-							</div>
-					      </div>
-				      </div>
-				      {% endfor %}
-			      </div>
-		      </div>
-	   
+	     	<div class="row">
+	    	<section class="col-xs-12 col-sm-6 col-md-12">
+			{% for comic in comics %}
+				<article class="search-result row">
+					<div class="col-xs-12 col-sm-12 col-md-3">
+						<a href="/comics/comic/{{ comic.comic_id }}" title="Lorem ipsum" class="thumbnail"><img width="80"  src="{{ comic.image }}" alt="Lorem ipsum" /></a>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-2">
+						<ul class="meta-search">
+							<li>
+								{% if comic.store_date %}
+									<i class="glyphicon glyphicon-calendar"></i> 
+									<span>{{ comic.store_date }}</span>
+								{% endif %}
+							</li>
+							<li><i class="glyphicon glyphicon-tags"></i> <span>Comic</span></li>
+						</ul>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+						<h4><a href="/comics/comic/{{ comic.comic_id }}" title="Lorem ipsum">{{ comic.title}} #{{ comic.issue_number }}</a></h4>
+					        <span class="minus"><a href="/comics/followcomic/{{ comic.comic_id }}" title="Remove from my list"><i class="glyphicon glyphicon-minus"></i></a></span>
 
+					</div>
+					<span class="clearfix borda"></span>
+				</article>
+			{% endfor %}
+		</section>
+		</div>
       </div>
 	      <div id="authors" class="tab-pane fade">
 		      <div class="row">
@@ -48,8 +54,9 @@
 								<a href="/comics/author/{{ author.author_id }}" style="color: inherit">
 									<h3>{{ author.name }}</h3>
 								</a>
-							      	<p align="center">
-							      	<a href="#" class="btn btn-primary btn-block">Añadir</a></p>
+							      	 <p align="center">
+							      		<a href="#" class="btn btn-danger btn-block">Remove from my list</a>
+							         </p>
 							</div>
 					      </div>
 				      </div>
@@ -72,7 +79,8 @@
 							      <h3>{{ character.super_name }}</h3>
 							   </a>
 							      <p align="center">
-							      <a href="#" class="btn btn-primary btn-block">Añadir</a></p>
+							      		<a href="#" class="btn btn-danger btn-block">Remove from my list</a>
+							      </p>
 						      </div>
 					      </div>
 				      </div>

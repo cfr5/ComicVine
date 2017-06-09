@@ -17,11 +17,17 @@ from comics.models import Comic, Character, Author, CharacterFollows, ComicFollo
 from django.conf import settings
 import requests
 import json
+import urlparse
+import math
 
 # Create your views here.
 @login_required()
 def index(request):
-    context = {'comics': Comic.objects.all(),'characters': Character.objects.all(),'authors': Author.objects.all()}
+    comics = []
+    for follows in ComicFollows.objects.all().filter(user_id=request.user).values():
+        c_id= follows['comic_id']
+        comics.append(Comic.objects.all().filter(pk=c_id).values()[0])
+    context = {'comics': comics,'characters': Character.objects.all(),'authors': Author.objects.all()}
     return render(request, 'comics/index.html', context)
 
 def register(request):
@@ -71,7 +77,7 @@ def comic(request, comic_id):
                 title=results['name']
                 if not title:
                     title= "Title not available"
-                image=results['image']['super_url']
+                image=results['image']['thumb_url']
                 store_date=results['cover_date']
                 if not store_date:
                     store_date= "0000-00-00"
@@ -160,19 +166,14 @@ def statistics(request):
     for year_author in range(1900,2018):
         st_year_author=str(year_author)
         age_authors=df_authors['birth_date'].str.contains(st_year_author)
-        print(age_authors)
         #age=2017-year
         contador_author=np.sum(age_authors)
         if contador_author>=1:
             dictionary_authors[year_author]=contador_author
-            #print(age_authors)
-            #print(np.sum(age_authors))
         year_author+=1
 
-    #print(dictionary)
     df_authors_age=DataFrame.from_dict(dictionary_authors,orient='index')
     df_authors_age_sorted=df_authors_age.sort_index(ascending=False)
-    #print(df_authors_age)
     p_authors_age= df_authors_age_sorted.plot(legend=False,kind='barh',figsize=(8,3))
     p_authors_age.get_figure().savefig('comics/static/statistics/authors_age.png')
 
@@ -183,7 +184,6 @@ def statistics(request):
     comics= Comic.objects.all()
     query_comics = str(comics.query)
     df_comics = pd.read_sql_query(query_comics, connection)
-    print(df_comics)
     dictionary_comics = {}
     month_comic = 1
 
@@ -192,10 +192,7 @@ def statistics(request):
             st_month_comic = "-0"+str(month_comic)+"-"
         else:
             st_month_comic = "-"+str(month_comic)+"-"
-        print(month_comic)
         comic_permonth = df_comics['store_date'].str.contains(st_month_comic)
-        print(comic_permonth)
-        #age=2017-year
         contador_comic = np.sum(comic_permonth)
         options_months = {
         1 : "January",
@@ -214,15 +211,9 @@ def statistics(request):
 
         if contador_comic>=1:
             dictionary_comics[options_months[month_comic]]=contador_comic
-        #dictionary_comics[month_comic]=contador_comic
-
-        #print(age_authors)
-        #print(np.sum(age_authors))
         contador_comic+=1
 
-    #print(dictionary_comics)
     df_comics_month=DataFrame.from_dict(dictionary_comics,orient='index')
-    #print(df_comics_month)
 
     df_comics_month_sorted=df_comics_month.sort_index(ascending=False)
 
@@ -242,13 +233,14 @@ def search(request):
     headers = {'User-Agent': 'PintGrupo10'}
     api_key = settings.COMICVINE_KEY
     end_point = 'https://comicvine.gamespot.com/search/'
-    limit= 5
+    limit= 10.0
     page = request.GET.get('page', 1)
     response = requests.get('https://comicvine.gamespot.com/api/search/', params={'format': 'json', 'api_key': api_key, 'resources': query_type, 'query': query, 'limit' : limit,'limit': limit}, headers=headers)
     son = json.loads(response.text)
     results = son['results']
     results_lenght = len(results)
-    return render(request, 'comics/search.html',{'results': results, 'results_lenght': results_lenght, 'query': query, 'query_type': query_type})
+    n_pages = int(math.ceil(son['number_of_total_results']/limit))
+    return render(request, 'comics/search.html',{'results': results, 'results_lenght': results_lenght, 'query': query, 'query_type': query_type, 'n_pages': range(n_pages)})
 
 @login_required()
 def followcomic(request, comic_id):
@@ -258,7 +250,12 @@ def followcomic(request, comic_id):
             ComicFollows(comic=comic,user_id=request.user).save()
         else:
             ComicFollows.objects.filter(comic=comic_id,user_id=request.user).delete()
-        return redirect('comic', comic_id)
+        path = urlparse.urlparse(request.META.get('HTTP_REFERER')).path
+        split = path.split('/')
+        if len(split) == 3:
+            return redirect(path)
+        else:
+            return redirect(path, comic_id)
     else:
         return render(request, 'comics/404.html')
 
@@ -268,7 +265,12 @@ def followauthor(request, author_id):
         author = Author.objects.get(pk=author_id)
         if not AuthorFollows.objects.filter(author=author_id,user_id=request.user):
             AuthorFollows(author=author,user_id=request.user).save()
-        return render(request, 'comics/author.html')
+        path = urlparse.urlparse(request.META.get('HTTP_REFERER')).path
+        split = path.split('/')
+        if len(split) == 3:
+            return redirect(path)
+        else:
+            return redirect(path, comic_id)
     else:
         return render(request, 'comics/404.html')
 
@@ -278,6 +280,11 @@ def followcharacter(request, character_id):
         character = Character.objects.get(pk=character_id)
         if not CharacterFollows.objects.filter(character=character_id,user_id=request.user):
             CharacterFollows(character=character,user_id=request.user).save()
-        return render(request, 'comics/character.html')
+        path = urlparse.urlparse(request.META.get('HTTP_REFERER')).path
+        split = path.split('/')
+        if len(split) == 3:
+            return redirect(path)
+        else:
+            return redirect(path, comic_id)
     else:
         return render(request, 'comics/404.html')
