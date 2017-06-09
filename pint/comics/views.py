@@ -5,15 +5,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 import pandas as pd
 import numpy as np
 from django.db import connection
-
 from comics.forms import UserCreationForm
-
-from comics.models import Comic, Character, Author, CharacterFollows
+from comics.models import Comic, Character, Author, CharacterFollows, ComicFollows, AuthorFollows
+from django.conf import settings
+import requests
+import json
 
 # Create your views here.
 @login_required()
@@ -50,18 +53,27 @@ def shops(request):
 
 @login_required()
 def comic(request, comic_id):
-    context = {'comic': Comic.objects.get(pk=comic_id)}
-    return render(request, 'comics/comic.html',context)
+    if Comic.objects.filter(pk=comic_id).count():
+        context = {'comic': Comic.objects.get(pk=comic_id)}
+        return render(request, 'comics/comic.html',context)
+    else:
+        return render(request, 'comics/404.html')
 
 @login_required()
 def author(request, author_id):
-    context = {'author': Author.objects.get(pk=author_id)}
-    return render(request, 'comics/author.html',context)
+    if Author.objects.filter(pk=author_id).count():
+        context = {'author': Author.objects.get(pk=author_id)}
+        return render(request, 'comics/author.html',context)
+    else:
+        return render(request, 'comics/404.html')
 
 @login_required()
 def character(request, character_id):
-    context = {'character': Character.objects.get(pk=character_id)}
-    return render(request, 'comics/character.html',context)
+    if Character.objects.filter(pk=character_id).count():
+        context = {'character': Character.objects.get(pk=character_id)}
+        return render(request, 'comics/character.html',context)
+    else:
+        return render(request, 'comics/404.html')
 
 def test(request):
     #c= Character(character_id=1,super_name='Mr Chaman',real_name='Ignatius',aliases= 'pollito',publisher='ser',gender='male',character_type='human',powers='all',image='http://4www.ecestaticos.com/imagestatic/clipping/491/e81/491e810bc7d83a6dbe8d51a5948d55b4/la-buena-mierda-fascista-de-ignatius-farray-en-la-cama-con-la-bestia-parda-del-humor.jpg',origin='Canarias')
@@ -125,13 +137,47 @@ def statistics(request):
 
 	return render(request, 'config/statistics.html')
 
+@login_required()
+def search(request):
+    query = request.GET['query']
+    query_type = request.GET['search_param']
+    headers = {'User-Agent': 'PintGrupo10'}
+    api_key = settings.COMICVINE_KEY
+    end_point = 'https://comicvine.gamespot.com/search/'
+    limit= 5
+    page = request.GET.get('page', 1)
+    response = requests.get('https://comicvine.gamespot.com/api/search/', params={'format': 'json', 'api_key': api_key, 'resources': query_type, 'query': query, 'limit' : limit,'limit': limit}, headers=headers)
+    son = json.loads(response.text)
+    results = son['results']
+    results_lenght = len(results)
+    return render(request, 'comics/search.html',{'results': results, 'results_lenght': results_lenght, 'query': query, 'query_type': query_type})
 
+@login_required()
+def followcomic(request, comic_id):
+    if Comic.objects.filter(pk=comic_id).count():
+        comic = Comic.objects.get(pk=comic_id)
+        if not ComicFollows.objects.filter(comic=comic_id,user_id=request.user):
+            ComicFollows(comic=comic,user_id=request.user).save()
+        return render(request, 'comics/comic.html')
+    else:
+        return render(request, 'comics/404.html')
 
+@login_required()
+def followauthor(request, author_id):
+    if Author.objects.filter(pk=author_id).count():
+        author = Author.objects.get(pk=author_id)
+        if not AuthorFollows.objects.filter(author=author_id,user_id=request.user):
+            AuthorFollows(author=author,user_id=request.user).save()
+        return render(request, 'comics/author.html')
+    else:
+        return render(request, 'comics/404.html')
 
-
-
-
-
-
-
-
+@login_required()
+def followcharacter(request, character_id):
+    if Comic.objects.filter(pk=character_id).count():
+        character = Character.objects.get(pk=character_id)
+        if not CharacterFollows.objects.filter(character=character_id,user_id=request.user):
+            CharacterFollows(character=character,user_id=request.user).save()
+        return render(request, 'comics/character.html')
+    else:
+        return render(request, 'comics/404.html')

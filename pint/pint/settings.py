@@ -98,6 +98,8 @@ SOCIAL_AUTH_TWITTER_KEY = 'i5gX1RdnBpPULnd8BSSO7bUsc'
 SOCIAL_AUTH_TWITTER_SECRET = 'VoSSuzLFWdhm4oK7NVE1d3RiAsVrniygqS0CXfjKYYyaIG8CeI'
 
 GMAPS_KEY = 'AIzaSyC3_NVZ8zYChBDpwF-9yE_AMW6o3UtRdQw'
+
+COMICVINE_KEY = 'a704489b62207ffb4b740575cf920e282b0dbc50'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 

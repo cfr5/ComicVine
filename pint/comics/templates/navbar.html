@@ -32,20 +32,19 @@
 			{% endif %}
 		</ul>
 		{% if user.is_authenticated %}
-		<form class="navbar-form navbar-right">
-			
+		<form class="navbar-form navbar-right" action="{% url 'search' %}" method="GET">
+			{% csrf_token %}	
 		<div class="input-group">
 		      <div class="input-group-btn search-panel">
-			<select class="btn btn-default dropdown-toggle" data-toggle="dropdown">Filter by<>
-			    <option><a href="#com">Comic</a></option>
-                            <option><a href="#char">Character</a></option>
-                            <option><a href="#aut">Author</a></option>
+			<select class="btn btn-default dropdown-toggle" data-toggle="dropdown" name="search_param">Filter by<>
+			    <option value="issue"><a href="#com">Comic</a></option>
+                            <option value="character"><a href="#char">Character</a></option>
+                            <option value="person"><a href="#aut">Author</a></option>
 			</select>
 		      </div>
-			 <input type="hidden" name="search_param" value="all" id="search_param">
-                    	<input type="text" class="form-control" name="x" placeholder="Search term...">
+			<input type="text" class="form-control" name="query" placeholder="Search term...">
                     	<span class="input-group-btn">
-                        	<button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        	<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                     	</span>
 						
 		</div>

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Comics{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <hgroup class="mb20">
+		<h1>Search Results</h1>
+		<h2 class="lead"><strong class="text-danger">{{ results_lenght }}</strong> results were found for the search for <strong class="text-danger">{{ query }}</strong></h2>								
+	</hgroup>
+
+    	<section class="col-xs-12 col-sm-6 col-md-12">
+		{% for result in results %}
+			<article class="search-result row">
+				<div class="col-xs-12 col-sm-12 col-md-3">
+					<a href="#" title="Lorem ipsum" class="thumbnail"><img src="{{ result.image.thumb_url }}" alt="Lorem ipsum" /></a>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-2">
+					<ul class="meta-search">
+						<li>
+							{% if result.cover_date %}
+								<i class="glyphicon glyphicon-calendar"></i> 
+								<span>{{ result.cover_date }}</span>
+							{% elif result.birth %}
+								<i class="glyphicon glyphicon-calendar"></i> 
+								<span>{{ result.birth|slice:"0:10" }}</span>
+							{% endif %}
+						</li>
+						{% if query_type == 'issue' %}
+							<li><i class="glyphicon glyphicon-tags"></i> <span>Comic</span></li>
+						{% elif query_type == 'person' %}
+							<li><i class="glyphicon glyphicon-tags"></i> <span>Author</span></li>
+						{% elif query_type == 'character' %}
+							<li><i class="glyphicon glyphicon-tags"></i> <span>Character</span></li>
+						{% endif %}
+					</ul>
+				</div>
+				<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
+					<h4><a href="#" title="">{{ result.name}} #{{ result.issue_number }} </a></h4>
+					{% if result.description %}
+						{% autoescape off %}{{ result.description|slice:"0:400" }}{% endautoescape %}
+					{% endif %}
+				</div>
+				<span class="clearfix borda"></span>
+			</article>
+		{% endfor %}
+	</section>
+<center>
+	<ul class="pagination">
+		      <li class="disabled"><a href="#">«</a></li>
+		      <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+		      <li><a href="#">2</a></li>
+		      <li><a href="#">3</a></li>
+		      <li><a href="#">4</a></li>
+		      <li><a href="#">5</a></li>
+		      <li><a href="#">»</a></li>
+	</ul>
+</center>
+{% endblock %}
