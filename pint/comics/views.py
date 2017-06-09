@@ -89,53 +89,139 @@ def test(request):
 
 @login_required()
 def statistics(request):
-	
-	#Characters
-	characters= Character.objects.all()
-	query_characters = str(characters.query)
-	df_characters = pd.read_sql_query(query_characters, connection)
-	#Genero
-	gender_characters=df_characters.groupby('gender').count()['character_id']
-	
-	p_characters_gender= gender_characters.plot(legend=False,kind='barh',figsize=(8,3))
-
-	p_characters_gender.get_figure().savefig('comics/static/statistics/characters_gender.png')
-	
-	#Type
-	type_characters= df_characters.groupby('character_type').count()['character_id']
-	p_characters_type= type_characters.plot(legend=False,kind='barh',figsize=(8,3))
-	p_characters_type.get_figure().savefig('comics/static/statistics/characters_type.png')
-
-	#Publisher
-	publisher_characters= df_characters.groupby('publisher').count()['character_id']
-	p_characters_publisher= publisher_characters.plot(legend=False,kind='barh',figsize=(8,3))
-	p_characters_publisher.get_figure().savefig('comics/static/statistics/characters_publisher.png')
-	
-	#Powers
-	powers_characters= df_characters.groupby('powers').count()['character_id']
-	p_characters_powers= powers_characters.plot(legend=False,kind='barh',figsize=(8,3))
-	p_characters_powers.get_figure().savefig('comics/static/statistics/characters_powers.png')
 
 
-	#Authors
-	authors= Author.objects.all()
-	query_authors = str(authors.query)
-	df_authors = pd.read_sql_query(query_authors, connection)
+    #Characters
+    characters= Character.objects.all()
+    query_characters = str(characters.query)
+    df_characters = pd.read_sql_query(query_characters, connection)
 
-	#Genero
-	gender_authors=df_authors.groupby('gender').count()['author_id']
-	p_authors_gender= gender_authors.plot(legend=False,kind='barh',figsize=(8,3))
-	p_authors_gender.get_figure().savefig('comics/static/statistics/authors_gender.png')
-	
-	
-	#Genero
-	country_authors=df_authors.groupby('country').count()['author_id']
-	p_authors_country= country_authors.plot(legend=False,kind='barh',figsize=(8,3))
-	p_authors_country.get_figure().savefig('comics/static/statistics/authors_country.png')
+    #Genero
+    gender_characters=df_characters.groupby('gender').count()['character_id']
+    p_characters_gender= gender_characters.plot(legend=False,kind='barh',figsize=(8,3))
+    p_characters_gender.get_figure().savefig('comics/static/statistics/characters_gender.png')
+
+    plt.clf()
+
+    #Type
+    type_characters= df_characters.groupby('character_type').count()['character_id']
+    p_characters_type= type_characters.plot(legend=False,kind='barh',figsize=(8,3))
+    p_characters_type.get_figure().savefig('comics/static/statistics/characters_type.png')
+
+    plt.clf()
+
+    #Publisher
+    publisher_characters= df_characters.groupby('publisher').count()['character_id']
+    p_characters_publisher= publisher_characters.plot(legend=False,kind='barh',figsize=(8,3))
+    p_characters_publisher.get_figure().savefig('comics/static/statistics/characters_publisher.png')
+
+    plt.clf()
+
+    #Powers
+    powers_characters= df_characters.groupby('powers').count()['character_id']
+    p_characters_powers= powers_characters.plot(legend=False,kind='barh',figsize=(8,3))
+    p_characters_powers.get_figure().savefig('comics/static/statistics/characters_powers.png')
+
+    plt.clf()
+
+    #Authors
+    authors= Author.objects.all()
+    query_authors = str(authors.query)
+    df_authors = pd.read_sql_query(query_authors, connection)
 
 
+    #Genero
+    gender_authors=df_authors.groupby('gender').count()['author_id']
+    p_authors_gender= gender_authors.plot(legend=False,kind='barh',figsize=(8,3))
+    p_authors_gender.get_figure().savefig('comics/static/statistics/authors_gender.png')
 
-	return render(request, 'config/statistics.html')
+    plt.clf()
+
+    #Country
+    country_authors=df_authors.groupby('country').count()['author_id']
+    p_authors_country= country_authors.plot(legend=False,kind='barh',figsize=(8,3))
+    p_authors_country.get_figure().savefig('comics/static/statistics/authors_country.png')
+
+    plt.clf()
+
+    dictionary_authors={}
+    year_author=1900
+    for year_author in range(1900,2018):
+        st_year_author=str(year_author)
+        age_authors=df_authors['birth_date'].str.contains(st_year_author)
+        print(age_authors)
+        #age=2017-year
+        contador_author=np.sum(age_authors)
+        if contador_author>=1:
+            dictionary_authors[year_author]=contador_author
+            #print(age_authors)
+            #print(np.sum(age_authors))
+        year_author+=1
+
+    #print(dictionary)
+    df_authors_age=DataFrame.from_dict(dictionary_authors,orient='index')
+    df_authors_age_sorted=df_authors_age.sort_index(ascending=False)
+    #print(df_authors_age)
+    p_authors_age= df_authors_age_sorted.plot(legend=False,kind='barh',figsize=(8,3))
+    p_authors_age.get_figure().savefig('comics/static/statistics/authors_age.png')
+
+    plt.clf()
+
+    #Comics
+
+    comics= Comic.objects.all()
+    query_comics = str(comics.query)
+    df_comics = pd.read_sql_query(query_comics, connection)
+    print(df_comics)
+    dictionary_comics = {}
+    month_comic = 1
+
+    for month_comic in range(1,13):
+        if month_comic < 10:
+            st_month_comic = "-0"+str(month_comic)+"-"
+        else:
+            st_month_comic = "-"+str(month_comic)+"-"
+        print(month_comic)
+        comic_permonth = df_comics['store_date'].str.contains(st_month_comic)
+        print(comic_permonth)
+        #age=2017-year
+        contador_comic = np.sum(comic_permonth)
+        options_months = {
+        1 : "January",
+        2 : "February",
+        3 : "March",
+        4 : "April",
+        5 : "May",
+        6 : "June",
+        7 : "July",
+        8 : "August",
+        9 : "September",
+        10 : "October",
+        11 : "Nobember",
+        12 : "December"}
+
+
+        if contador_comic>=1:
+            dictionary_comics[options_months[month_comic]]=contador_comic
+        #dictionary_comics[month_comic]=contador_comic
+
+        #print(age_authors)
+        #print(np.sum(age_authors))
+        contador_comic+=1
+
+    #print(dictionary_comics)
+    df_comics_month=DataFrame.from_dict(dictionary_comics,orient='index')
+    #print(df_comics_month)
+
+    df_comics_month_sorted=df_comics_month.sort_index(ascending=False)
+
+    p_comics_month= df_comics_month_sorted.plot(legend=False,kind='barh',figsize=(8,3))
+    p_comics_month.get_figure().savefig('comics/static/statistics/comics_month.png')
+
+    plt.clf()
+
+    return render(request, 'config/statistics.html')
+
 
 @login_required()
 def search(request):
