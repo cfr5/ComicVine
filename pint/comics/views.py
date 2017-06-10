@@ -121,20 +121,28 @@ def author(request, author_id):
                 country=results['country']
                 if not country:
                     country= "Country not available"
-                gender=results['gender']
-                if not gender:
-                    gender= "Gender not available"
+                genderI= results['gender']
+                genderS= ""
+                if not genderI:
+                    genderS="None"
+                else:
+                    if genderI == 1:
+                        genderS = 'Male'
+                    elif genderI == 2:
+                        genderS = 'Female'
+                    else:
+                        genderS = 'Other'
                 alias=results['aliases']
                 if not alias:
                     alias= "Alias not available"
                 birth_date=results['birth']
                 if not birth_date:
                     birth_date= "Birth date not available"
-                biography=results['description']
+                biography=results['deck']
                 if not biography:
                     biography= "Biography not available"
                 image=results['image']['thumb_url']
-                Author(author_id,name,town,country,gender,alias,birth_date,biography,image).save()
+                Author(author_id,name,town,country,genderS,alias,birth_date,biography,image).save()
 
                 return render(request, 'comics/author.html', {'author': Author.objects.get(pk=author_id), 'follows': follows})
 
@@ -172,20 +180,32 @@ def character(request, character_id):
                 publisher= results['publisher']['name']
                 if not publisher:
                     publisher="Publisher not avaliable"
-                gender= results['gender']
-                if not gender:
-                    gender="Gender not avaliable"
+                genderI= results['gender']
+                genderS= ""
+                if not genderI:
+                    genderS="None"
+                else:
+                    if genderI == 1:
+                        genderS = 'Male'
+                    elif genderI == 2:
+                        genderS = 'Female'
+                    else:
+                        genderS = 'Other'
                 character_type= results['origin']['name']
                 if not character_type:
                     character_type="Character type not available"
-                powers=results['powers'][0]['name']
-                if not powers:
+                powers=""
+                if results['powers']:
+                    powers=results['powers'][0]['name']
+                    if not powers:
+                        powers='None'
+                else:
                     powers='None'
                 image= results['image']['thumb_url']
                 origin= results['deck']
                 if not origin:
                     origin= 'Origin not available'
-                Character(character_id,super_name,real_name,aliases,publisher,gender,character_type,powers,image,origin).save()
+                Character(character_id,super_name,real_name,aliases,publisher,genderS,character_type,powers,image,origin).save()
                 return render(request, 'comics/character.html', {'character': Character.objects.get(pk=character_id), 'follows': follows})
 
         return render(request, 'comics/404.html')
