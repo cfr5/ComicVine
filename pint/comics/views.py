@@ -312,6 +312,16 @@ def statistics(request):
 
     plt.clf()
 
+
+    #ComicFollows
+    users= ComicFollows.objects.all()
+    query_users = str(users.query)
+    df_users = pd.read_sql_query(query_users, connection)
+
+    print(df_users)
+
+    
+
     return render(request, 'config/statistics.html')
 
 
