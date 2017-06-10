@@ -84,7 +84,7 @@
                       <label for="email">Alias:</label>
                       <p> {{author.aliases}}</p>
                     </div>
-		<form action="/comics/followcomic/{{ comic.comic_id }}">
+		<form action="/comics/followauthor/{{ author.author_id }}">
 			{% if follows %}
                 		<input type="submit" class="btn btn-danger btn-block" value="Remove from my list"/>
 			{% else %}
