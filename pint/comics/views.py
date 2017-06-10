@@ -178,11 +178,14 @@ def character(request, character_id):
                 character_type= results['origin']['name']
                 if not character_type:
                     character_type="Character type not available"
-                powers=""
-                for power in results['powers']:
-                    powers = powers + power['name'] + "<br>"
+                powers=results['powers'][0]['name']
+                if not powers:
+                    powers='None'
                 image= results['image']['thumb_url']
-                Character(character_id,super_name,real_name,aliases,publisher,gender,character_type,powers,image).save()
+                origin= results['deck']
+                if not origin:
+                    origin= 'Origin not available'
+                Character(character_id,super_name,real_name,aliases,publisher,gender,character_type,powers,image,origin).save()
                 return render(request, 'comics/character.html', {'character': Character.objects.get(pk=character_id), 'follows': follows})
 
         return render(request, 'comics/404.html')
