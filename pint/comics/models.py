@@ -20,10 +20,9 @@ class Character (models.Model):
 
 class Comic (models.Model):
     comic_id = models.CharField(max_length=50,primary_key = 'true')
-    issue_number = models.IntegerField()
+    issue_number = models.CharField(max_length=100)
     title = models.CharField(max_length=1000)
     image = models.CharField(max_length=1000)
-    characters = models.ManyToManyField(Character, verbose_name="list of characters")
     store_date = models.CharField(max_length=1000)
     synopsis = models.CharField(max_length=10000)
     def __unicode__(self):
@@ -32,7 +31,6 @@ class Comic (models.Model):
 class Author (models.Model):
     author_id = models.CharField(max_length=50,primary_key = 'true')
     name = models.CharField(max_length=1000)
-    comics = models.ManyToManyField(Comic, verbose_name="list of comics")
     town = models.CharField(max_length=1000)
     country = models.CharField(max_length=1000)
     gender = models.CharField(max_length=1000)
@@ -43,13 +41,6 @@ class Author (models.Model):
 
     def __unicode__(self):
         return self.author_id
-'''
-class UserFollows (models.Model):
-    user_id = models.CharField(max_length=50,primary_key = 'true')
-    characters = models.ManyToManyField(Character, verbose_name="list of characters")
-    comics = models.ManyToManyField(Comic, verbose_name="list of comics")
-    authors = models.ManyToManyField(Author, verbose_name="list of authors")
-'''
 
 class ComicFollows(models.Model):
     follows_id = models.AutoField(primary_key=True)
