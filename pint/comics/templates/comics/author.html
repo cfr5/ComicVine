@@ -8,10 +8,9 @@
   <div class="row">
     <div class="fb-profile">
         <img align="left" class="fb-image-lg" src="/comics/static/images/author.jpg" alt="Profile image example"/>
-        <img align="left" class="fb-image-profile thumbnail" src="http://lorempixel.com/180/180/people/9/" alt="Profile image example"/>
+        <img align="left" class="fb-image-profile thumbnail" src="{{author.image}}" alt="Profile image example"/>
         <div class="fb-profile-text">
             <h1>{{author.name}}</h1>
-
         </div>
     </div>
   </div>
@@ -35,7 +34,9 @@
             <div class="tab-pane active" id="tab_default_1">
 
               <p>
-                {{author.biography}}
+		{% autoescape off %}
+                	{{author.biography}}
+		{% endautoescape %}
               </p>
 
             </div>
@@ -83,8 +84,14 @@
                       <label for="email">Alias:</label>
                       <p> {{author.aliases}}</p>
                     </div>
+		<form action="/comics/followcomic/{{ comic.comic_id }}">
+			{% if follows %}
+                		<input type="submit" class="btn btn-danger btn-block" value="Remove from my list"/>
+			{% else %}
+                		<input type="submit" class="btn btn-primary btn-block" value="Add to my list"/>
+			{% endif %}
 
-                <button type="submit" class="btn btn-danger btn-block">Add to my list</button>
+		</form>
             </div>
         </div>
     </div>

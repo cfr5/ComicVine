@@ -76,9 +76,14 @@
                       <label for="email">Powers:</label>
                       <p> {{character.powers}} </p>
                    </div>
+		<form action="/comics/followcomic/{{ comic.comic_id }}">
+			{% if follows %}
+                		<input type="submit" class="btn btn-danger btn-block" value="Remove from my list"/>
+			{% else %}
+                		<input type="submit" class="btn btn-primary btn-block" value="Add to my list"/>
+			{% endif %}
 
-
-                <button type="submit" class="btn btn-danger btn-block">Add to my list</button>
+		</form>
             </div>
         </div>
     </div>

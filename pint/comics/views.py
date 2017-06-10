@@ -24,10 +24,14 @@ import math
 @login_required()
 def index(request):
     comics = []
+    authors = []
     for follows in ComicFollows.objects.all().filter(user_id=request.user).values():
         c_id= follows['comic_id']
         comics.append(Comic.objects.all().filter(pk=c_id).values()[0])
-    context = {'comics': comics,'characters': Character.objects.all(),'authors': Author.objects.all()}
+    for follows in AuthorFollows.objects.all().filter(user_id=request.user).values():
+        a_id= follows['author_id']
+        authors.append(Author.objects.all().filter(pk=a_id).values()[0])
+    context = {'comics': comics,'characters': Character.objects.all(),'authors': authors}
     return render(request, 'comics/index.html', context)
 
 def register(request):
@@ -92,6 +96,47 @@ def comic(request, comic_id):
 
 @login_required()
 def author(request, author_id):
+    follows = AuthorFollows.objects.filter(author=author_id,user_id=request.user).count()
+
+    if Author.objects.filter(pk=author_id).count():
+        return render(request, 'comics/author.html',{'author': Author.objects.get(pk=author_id), 'follows': follows})
+    else:
+        headers = {'User-Agent': 'PintGrupo10'}
+        response = requests.get('https://comicvine.gamespot.com/api/person/4040-'+author_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY}, headers=headers)
+        if response.status_code == 200:
+            son = json.loads(response.text)
+            results = son['results']
+            if results:
+                print results
+                author_id=results['id']
+                name=results['name']
+                if not name:
+                    name= "Name not available"
+                town=results['hometown']
+                if not town:
+                    town= "Town not available"
+                country=results['country']
+                if not country:
+                    country= "Country not available"
+                gender=results['gender']
+                if not gender:
+                    gender= "Gender not available"
+                alias=results['aliases']
+                if not alias:
+                    alias= "Alias not available"
+                birth_date=results['birth']
+                if not birth_date:
+                    birth_date= "Birth date not available"
+                biography=results['description']
+                if not biography:
+                    biography= "Biography not available"
+                image=results['image']['thumb_url']
+                Author(author_id,name,town,country,gender,alias,birth_date,biography,image).save()
+
+                return render(request, 'comics/comic.html', {'author': Author.objects.get(pk=author_id), 'follows': follows})
+
+        return render(request, 'comics/404.html')
+
     if Author.objects.filter(pk=author_id).count():
         context = {'author': Author.objects.get(pk=author_id)}
         return render(request, 'comics/author.html',context)
@@ -263,8 +308,11 @@ def followcomic(request, comic_id):
 def followauthor(request, author_id):
     if Author.objects.filter(pk=author_id).count():
         author = Author.objects.get(pk=author_id)
+        print author
         if not AuthorFollows.objects.filter(author=author_id,user_id=request.user):
             AuthorFollows(author=author,user_id=request.user).save()
+        else:
+            AuthorFollows.objects.filter(author=author_id,user_id=request.user).delete()
         path = urlparse.urlparse(request.META.get('HTTP_REFERER')).path
         split = path.split('/')
         if len(split) == 3:
