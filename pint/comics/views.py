@@ -73,6 +73,7 @@ def comic(request, comic_id):
         return render(request, 'comics/comic.html',{'comic': Comic.objects.get(pk=comic_id), 'follows': follows})
     else:
         headers = {'User-Agent': 'PintGrupo10'}
+        field_list='id,issue_number,name,volume,cover_date,description,image'
         response = requests.get('https://comicvine.gamespot.com/api/issue/4000-'+comic_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY}, headers=headers)
         if response.status_code == 200:
             son = json.loads(response.text)
@@ -83,9 +84,11 @@ def comic(request, comic_id):
                 if not issue_number:
                     issue_number= 0
                 title=results['name']
-                if not title:
-                    title= "Title not available"
-                image=results['image']['thumb_url']
+                if not title or title=='None':
+                    title = son['results']['volume']['name']
+                    if not title:
+                        title= "Title not available"
+                image=results['image']['small_url']
                 store_date=results['cover_date']
                 if not store_date:
                     store_date= "0000-00-00"
@@ -106,7 +109,8 @@ def author(request, author_id):
         return render(request, 'comics/author.html',{'author': Author.objects.get(pk=author_id), 'follows': follows})
     else:
         headers = {'User-Agent': 'PintGrupo10'}
-        response = requests.get('https://comicvine.gamespot.com/api/person/4040-'+author_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY}, headers=headers)
+        field_list='id,name,hometown,country,gender,aliases,birth,deck,image'
+        response = requests.get('https://comicvine.gamespot.com/api/person/4040-'+author_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY,'field_list':field_list}, headers=headers)
         if response.status_code == 200:
             son = json.loads(response.text)
             results = son['results']
@@ -141,7 +145,7 @@ def author(request, author_id):
                 biography=results['deck']
                 if not biography:
                     biography= "Biography not available"
-                image=results['image']['thumb_url']
+                image=results['image']['small_url']
                 Author(author_id,name,town,country,genderS,alias,birth_date,biography,image).save()
 
                 return render(request, 'comics/author.html', {'author': Author.objects.get(pk=author_id), 'follows': follows})
@@ -162,7 +166,9 @@ def character(request, character_id):
         return render(request, 'comics/character.html',{'character': Character.objects.get(pk=character_id), 'follows': follows})
     else:
         headers = {'User-Agent': 'PintGrupo10'}
-        response = requests.get('https://comicvine.gamespot.com/api/character/4005-'+character_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY}, headers=headers)
+        field_list='id,name,real_name,aliases,publisher,gender,origin,deck,powers,image'
+
+        response = requests.get('https://comicvine.gamespot.com/api/character/4005-'+character_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY,'field_list':field_list}, headers=headers)
         if response.status_code == 200:
             son = json.loads(response.text)
             results = son['results']
@@ -201,7 +207,7 @@ def character(request, character_id):
                         powers='None'
                 else:
                     powers='None'
-                image= results['image']['thumb_url']
+                image= results['image']['small_url']
                 origin= results['deck']
                 if not origin:
                     origin= 'Origin not available'
@@ -223,53 +229,61 @@ def statistics(request):
     query_characters = str(characters.query)
     df_characters = pd.read_sql_query(query_characters, connection)
 
-    #Genero
-    gender_characters=df_characters.groupby('gender').count()['character_id']
-    p_characters_gender= gender_characters.plot(legend=False,kind='barh',figsize=(8,3))
-    p_characters_gender.get_figure().savefig('comics/static/statistics/characters_gender.png')
+    if not df_characters.empty:
 
-    plt.clf()
+        #Genero
+        gender_characters=df_characters.groupby('gender').count()['character_id']
+        p_characters_gender= gender_characters.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_characters_gender.get_figure().savefig('comics/static/statistics/characters_gender.png')
 
-    #Type
-    type_characters= df_characters.groupby('character_type').count()['character_id']
-    p_characters_type= type_characters.plot(legend=False,kind='barh',figsize=(8,3))
-    p_characters_type.get_figure().savefig('comics/static/statistics/characters_type.png')
+        plt.clf()
 
-    plt.clf()
+        #Type
+        type_characters= df_characters.groupby('character_type').count()['character_id']
+        p_characters_type= type_characters.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_characters_type.get_figure().savefig('comics/static/statistics/characters_type.png')
 
-    #Publisher
-    publisher_characters= df_characters.groupby('publisher').count()['character_id']
-    p_characters_publisher= publisher_characters.plot(legend=False,kind='barh',figsize=(8,3))
-    p_characters_publisher.get_figure().savefig('comics/static/statistics/characters_publisher.png')
+        plt.clf()
 
-    plt.clf()
+        #Publisher
+        publisher_characters= df_characters.groupby('publisher').count()['character_id']
+        p_characters_publisher= publisher_characters.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_characters_publisher.get_figure().savefig('comics/static/statistics/characters_publisher.png')
 
-    #Powers
-    powers_characters= df_characters.groupby('powers').count()['character_id']
-    p_characters_powers= powers_characters.plot(legend=False,kind='barh',figsize=(8,3))
-    p_characters_powers.get_figure().savefig('comics/static/statistics/characters_powers.png')
+        plt.clf()
 
-    plt.clf()
+        #Powers
+        powers_characters= df_characters.groupby('powers').count()['character_id']
+        p_characters_powers= powers_characters.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_characters_powers.get_figure().savefig('comics/static/statistics/characters_powers.png')
+
+        plt.clf()
 
     #Authors
     authors= Author.objects.all()
     query_authors = str(authors.query)
     df_authors = pd.read_sql_query(query_authors, connection)
 
+    if not df_authors.empty:
+        #Genero
+        gender_authors=df_authors.groupby('gender').count()['author_id']
+        p_authors_gender= gender_authors.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_authors_gender.get_figure().savefig('comics/static/statistics/authors_gender.png')
 
-    #Genero
-    gender_authors=df_authors.groupby('gender').count()['author_id']
-    p_authors_gender= gender_authors.plot(legend=False,kind='barh',figsize=(8,3))
-    p_authors_gender.get_figure().savefig('comics/static/statistics/authors_gender.png')
+        plt.clf()
 
-    plt.clf()
+        #Country
+        country_authors=df_authors.groupby('country').count()['author_id']
+        p_authors_country= country_authors.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_authors_country.get_figure().savefig('comics/static/statistics/authors_country.png')
 
-    #Country
-    country_authors=df_authors.groupby('country').count()['author_id']
-    p_authors_country= country_authors.plot(legend=False,kind='barh',figsize=(8,3))
-    p_authors_country.get_figure().savefig('comics/static/statistics/authors_country.png')
-
-    plt.clf()
+        plt.clf()
 
     dictionary_authors={}
     year_author=1900
@@ -283,11 +297,13 @@ def statistics(request):
         year_author+=1
 
     df_authors_age=DataFrame.from_dict(dictionary_authors,orient='index')
-    df_authors_age_sorted=df_authors_age.sort_index(ascending=False)
-    p_authors_age= df_authors_age_sorted.plot(legend=False,kind='barh',figsize=(8,3))
-    p_authors_age.get_figure().savefig('comics/static/statistics/authors_age.png')
+    if not df_authors_age.empty:
+        df_authors_age_sorted=df_authors_age.sort_index(ascending=False)
+        p_authors_age= df_authors_age_sorted.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_authors_age.get_figure().savefig('comics/static/statistics/authors_age.png')
 
-    plt.clf()
+        plt.clf()
 
     #Comics
 
@@ -323,14 +339,16 @@ def statistics(request):
             dictionary_comics[options_months[month_comic]]=contador_comic
         contador_comic+=1
 
+
     df_comics_month=DataFrame.from_dict(dictionary_comics,orient='index')
+    if not df_comics_month.empty:
+        df_comics_month_sorted=df_comics_month.sort_index(ascending=False)
 
-    df_comics_month_sorted=df_comics_month.sort_index(ascending=False)
+        p_comics_month= df_comics_month_sorted.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_comics_month.get_figure().savefig('comics/static/statistics/comics_month.png')
 
-    p_comics_month= df_comics_month_sorted.plot(legend=False,kind='barh',figsize=(8,3))
-    p_comics_month.get_figure().savefig('comics/static/statistics/comics_month.png')
-
-    plt.clf()
+        plt.clf()
 
 
     #ComicFollows
@@ -340,7 +358,7 @@ def statistics(request):
 
     print(df_users)
 
-    
+
 
     return render(request, 'config/statistics.html')
 

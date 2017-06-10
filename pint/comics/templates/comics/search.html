@@ -7,7 +7,7 @@
 
     <hgroup class="mb20">
 		<h1>Search Results</h1>
-		<h2 class="lead"><strong class="text-danger">{{ results_lenght }}</strong> results were found for the search for <strong class="text-danger">{{ query }}</strong></h2>								
+		<h2 class="lead"><strong class="text-danger">{{ results_lenght }}</strong> results were found for the search for <strong class="text-danger">{{ query }}</strong></h2>
 	</hgroup>
 
     	<section class="col-xs-12 col-sm-6 col-md-12">
@@ -26,10 +26,10 @@
 					<ul class="meta-search">
 						<li>
 							{% if result.cover_date %}
-								<i class="glyphicon glyphicon-calendar"></i> 
+								<i class="glyphicon glyphicon-calendar"></i>
 								<span>{{ result.cover_date }}</span>
 							{% elif result.birth %}
-								<i class="glyphicon glyphicon-calendar"></i> 
+								<i class="glyphicon glyphicon-calendar"></i>
 								<span>{{ result.birth|slice:"0:10" }}</span>
 							{% endif %}
 						</li>
@@ -44,7 +44,7 @@
 				</div>
 				<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
 					{% if query_type == 'issue' %}
-						<h4><a href="/comics/comic/{{ result.id }}" title="Lorem ipsum">{{ result.name}} #{{ result.issue_number }}</a></h4>
+						<h4><a href="/comics/comic/{{ result.id }}" title="Lorem ipsum">{{ result.volume.name}} #{{ result.issue_number }}</a></h4>
 					{% elif query_type == 'person' %}
 						<h4><a href="/comics/author/{{ result.id }}" title="Lorem ipsum">{{ result.name }}</a></h4>
 					{% elif query_type == 'character' %}
