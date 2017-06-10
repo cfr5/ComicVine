@@ -25,13 +25,17 @@ import math
 def index(request):
     comics = []
     authors = []
+    characters = []
     for follows in ComicFollows.objects.all().filter(user_id=request.user).values():
         c_id= follows['comic_id']
         comics.append(Comic.objects.all().filter(pk=c_id).values()[0])
     for follows in AuthorFollows.objects.all().filter(user_id=request.user).values():
         a_id= follows['author_id']
         authors.append(Author.objects.all().filter(pk=a_id).values()[0])
-    context = {'comics': comics,'characters': Character.objects.all(),'authors': authors}
+    for follows in CharacterFollows.objects.all().filter(user_id=request.user).values():
+        c_id= follows['character_id']
+        characters.append(Character.objects.all().filter(pk=c_id).values()[0])
+    context = {'comics': comics,'characters': characters,'authors': authors}
     return render(request, 'comics/index.html', context)
 
 def register(request):
@@ -107,7 +111,6 @@ def author(request, author_id):
             son = json.loads(response.text)
             results = son['results']
             if results:
-                print results
                 author_id=results['id']
                 name=results['name']
                 if not name:
@@ -133,7 +136,7 @@ def author(request, author_id):
                 image=results['image']['thumb_url']
                 Author(author_id,name,town,country,gender,alias,birth_date,biography,image).save()
 
-                return render(request, 'comics/comic.html', {'author': Author.objects.get(pk=author_id), 'follows': follows})
+                return render(request, 'comics/author.html', {'author': Author.objects.get(pk=author_id), 'follows': follows})
 
         return render(request, 'comics/404.html')
 
@@ -145,6 +148,33 @@ def author(request, author_id):
 
 @login_required()
 def character(request, character_id):
+    follows = CharacterFollows.objects.filter(character=character_id,user_id=request.user).count()
+
+    if Character.objects.filter(pk=character_id).count():
+        return render(request, 'comics/character.html',{'character': Character.objects.get(pk=character_id), 'follows': follows})
+    else:
+        headers = {'User-Agent': 'PintGrupo10'}
+        response = requests.get('https://comicvine.gamespot.com/api/character/4005-'+character_id, params={'format': 'json', 'api_key': settings.COMICVINE_KEY}, headers=headers)
+        if response.status_code == 200:
+            son = json.loads(response.text)
+            results = son['results']
+            if results:
+                character_id= results['id']
+                super_name= results['name']
+                real_name= results['real_name']
+                aliases= results['aliases']
+                publisher= results['publisher']['name']
+                gender= results['gender']
+                character_type= results['origin']['name']
+                powers=""
+                for power in results['powers']:
+                    powers = powers + power['name'] + "<br>"
+                image= results['image']['thumb_url']
+                Character(character_id,super_name,real_name,aliases,publisher,gender,character_type,powers,image).save()
+                return render(request, 'comics/character.html', {'character': Character.objects.get(pk=character_id), 'follows': follows})
+
+        return render(request, 'comics/404.html')
+
     if Character.objects.filter(pk=character_id).count():
         context = {'character': Character.objects.get(pk=character_id)}
         return render(request, 'comics/character.html',context)
@@ -318,21 +348,24 @@ def followauthor(request, author_id):
         if len(split) == 3:
             return redirect(path)
         else:
-            return redirect(path, comic_id)
+            return redirect(path, author_id)
     else:
         return render(request, 'comics/404.html')
 
 @login_required()
 def followcharacter(request, character_id):
-    if Comic.objects.filter(pk=character_id).count():
+    print character_id
+    if Character.objects.filter(pk=character_id).count():
         character = Character.objects.get(pk=character_id)
         if not CharacterFollows.objects.filter(character=character_id,user_id=request.user):
             CharacterFollows(character=character,user_id=request.user).save()
+        else:
+            CharacterFollows.objects.filter(character=character_id,user_id=request.user).delete()
         path = urlparse.urlparse(request.META.get('HTTP_REFERER')).path
         split = path.split('/')
         if len(split) == 3:
             return redirect(path)
         else:
-            return redirect(path, comic_id)
+            return redirect(path, character_id)
     else:
         return render(request, 'comics/404.html')

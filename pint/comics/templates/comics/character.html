@@ -74,9 +74,9 @@
                   </div>
                    <div class="form-group">
                       <label for="email">Powers:</label>
-                      <p> {{character.powers}} </p>
+                      <p> {% autoescape off %}{{character.powers}}{% endautoescape%} </p>
                    </div>
-		<form action="/comics/followcomic/{{ comic.comic_id }}">
+		<form action="/comics/followcharacter/{{ character.character_id }}">
 			{% if follows %}
                 		<input type="submit" class="btn btn-danger btn-block" value="Remove from my list"/>
 			{% else %}
