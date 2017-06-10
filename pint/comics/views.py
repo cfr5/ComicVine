@@ -161,11 +161,23 @@ def character(request, character_id):
             if results:
                 character_id= results['id']
                 super_name= results['name']
+                if not super_name:
+                    super_name= "Super name not available"
                 real_name= results['real_name']
+                if not real_name:
+                    real_name= "Real name not available"
                 aliases= results['aliases']
+                if not aliases:
+                    aliases="Aliases not avaliable"
                 publisher= results['publisher']['name']
+                if not publisher:
+                    publisher="Publisher not avaliable"
                 gender= results['gender']
+                if not gender:
+                    gender="Gender not avaliable"
                 character_type= results['origin']['name']
+                if not character_type:
+                    character_type="Character type not available"
                 powers=""
                 for power in results['powers']:
                     powers = powers + power['name'] + "<br>"
