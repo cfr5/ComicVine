@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.decorators import login_required
 import matplotlib
 matplotlib.use('Agg')
@@ -54,7 +56,28 @@ def register(request):
 
 @login_required()
 def account(request):
-    return render(request, 'config/account.html')
+    if request.user.has_usable_password():
+        if request.method == 'POST':
+            form = PasswordChangeForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                update_session_auth_hash(request, user)  # Important!
+                messages.success(request, 'Your password was successfully updated!')
+                return redirect('account')
+            else:
+                messages.error(request, 'Please correct the error below.')
+        else:
+            form = PasswordChangeForm(request.user)
+    else:
+        if request.method == 'POST':
+            form = SetPasswordForm(request.user, request.POST)
+            if form.is_valid():
+                user = form.save()
+                return redirect('account')
+        else:
+            form = SetPasswordForm(request.user)
+    return render(request, 'config/account.html', {'form':form})
+
 
 @login_required()
 def shops(request):
