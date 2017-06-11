@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
@@ -46,12 +45,9 @@ def register(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             raw_password = form.cleaned_data.get('password1')
-            raw_password2 = form.cleaned_data.get('password2')
-            if (raw_password==raw_password2):
-                user = authenticate(username=username, email=email, password=raw_password)
-                login(request, user)
-                return redirect('index')
-            else: message.error(request, 'Contraseñas deferentes')
+            user = authenticate(username=username,email=email, password=raw_password)
+            login(request, user)
+            return redirect('index')
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
