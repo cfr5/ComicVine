@@ -331,29 +331,27 @@ def statistics(request):
     df_comics = pd.read_sql_query(query_comics, connection)
     dictionary_comics = {}
     month_comic = 1
-
+    options_months = {
+    1 : "January",
+    2 : "February",
+    3 : "March",
+    4 : "April",
+    5 : "May",
+    6 : "June",
+    7 : "July",
+    8 : "August",
+    9 : "September",
+    10 : "October",
+    11 : "Nobember",
+    12 : "December"}
     for month_comic in range(1,13):
         if month_comic < 10:
             st_month_comic = "-0"+str(month_comic)+"-"
         else:
             st_month_comic = "-"+str(month_comic)+"-"
         comic_permonth = df_comics['store_date'].str.contains(st_month_comic)
+
         contador_comic = np.sum(comic_permonth)
-        options_months = {
-        1 : "January",
-        2 : "February",
-        3 : "March",
-        4 : "April",
-        5 : "May",
-        6 : "June",
-        7 : "July",
-        8 : "August",
-        9 : "September",
-        10 : "October",
-        11 : "Nobember",
-        12 : "December"}
-
-
         if contador_comic>=1:
             dictionary_comics[options_months[month_comic]]=contador_comic
         contador_comic+=1
@@ -371,14 +369,97 @@ def statistics(request):
 
 
     #ComicFollows
-    users= ComicFollows.objects.all()
-    query_users = str(users.query)
-    df_users = pd.read_sql_query(query_users, connection)
+    comic_follows= ComicFollows.objects.all()
+    query_comic_follows = str(comic_follows.query)
+    df_comic_follows = pd.read_sql_query(query_comic_follows, connection)
 
-    print(df_users)
+    if not df_comic_follows.empty:
+        #FollowsPerMonth
+        month_comic_follows = 1
+        dictionary_comics={}
+        for month_comic_follows in range(1,13):
+            contador_follows=df_comic_follows[df_comic_follows.follows.apply(lambda x: x.month == month_comic_follows)].count()['user_id']
 
+            if contador_follows>=1:
+                dictionary_comics[options_months[month_comic_follows]]=contador_follows
+            month_comic_follows+=1
 
+        df_comic_follows_month=DataFrame.from_dict(dictionary_comics,orient='index')
 
+        p_df_comic_follows_month= df_comic_follows_month.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_df_comic_follows_month.get_figure().savefig('comics/static/statistics/comic_follows.png')
+
+        plt.clf()
+
+        #FollowsPerUser
+        df_user_follows=df_comic_follows.groupby('user_id').count()['follows_id']
+        p_df_user_follows= df_user_follows.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_df_user_follows.get_figure().savefig('comics/static/statistics/comic_user_follows.png')
+        plt.clf()
+
+    #CharacterFollows
+    character_follows= CharacterFollows.objects.all()
+    query_character_follows = str(character_follows.query)
+    df_character_follows = pd.read_sql_query(query_character_follows, connection)
+
+    if not df_character_follows.empty:
+        #FollowsPerMonth
+        month_characters_follows = 1
+        dictionary_characters={}
+        for month_characters_follows in range(1,13):
+            contador_follows=df_character_follows[df_character_follows.follows.apply(lambda x: x.month == month_characters_follows)].count()['user_id']
+
+            if contador_follows>=1:
+                dictionary_characters[options_months[month_characters_follows]]=contador_follows
+            month_comic_follows+=1
+
+        df_character_follows_month=DataFrame.from_dict(dictionary_characters,orient='index')
+
+        p_df_characters_follows_month= df_character_follows_month.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_df_characters_follows_month.get_figure().savefig('comics/static/statistics/character_follows.png')
+
+        plt.clf()
+
+        #FollowsPerUser
+        df_user_follows=df_character_follows.groupby('user_id').count()['follows_id']
+        p_df_user_follows= df_user_follows.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_df_user_follows.get_figure().savefig('comics/static/statistics/character_user_follows.png')
+        plt.clf()
+
+    #AuthorFollows
+    author_follows= AuthorFollows.objects.all()
+    query_author_follows = str(author_follows.query)
+    df_author_follows = pd.read_sql_query(query_author_follows, connection)
+
+    if not df_author_follows.empty:
+        #FollowsPerMonth
+        month_authors_follows = 1
+        dictionary_authors={}
+        for month_authors_follows in range(1,13):
+            contador_follows=df_author_follows[df_author_follows.follows.apply(lambda x: x.month == month_authors_follows)].count()['user_id']
+
+            if contador_follows>=1:
+                dictionary_authors[options_months[month_authors_follows]]=contador_follows
+            month_comic_follows+=1
+
+        df_author_follows_month=DataFrame.from_dict(dictionary_authors,orient='index')
+
+        p_df_authors_follows_month= df_author_follows_month.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_df_authors_follows_month.get_figure().savefig('comics/static/statistics/author_follows.png')
+
+        plt.clf()
+
+        #FollowsPerUser
+        df_user_follows=df_author_follows.groupby('user_id').count()['follows_id']
+        p_df_user_follows= df_user_follows.plot(legend=False,kind='barh',figsize=(8,3))
+        plt.tight_layout()
+        p_df_user_follows.get_figure().savefig('comics/static/statistics/author_user_follows.png')
+        plt.clf()
     return render(request, 'config/statistics.html')
 
 
