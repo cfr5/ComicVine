@@ -65,10 +65,8 @@
 					</div>
 
 				{% if form.errors %}
-
-				        {% for error in field.errors %}
-				          <p style="color: red">{{ error }}</p>
-        				{% endfor %}<span class="help-block">
+            <span class="help-block">{{ form.username.errors }}</span>
+            <span class="help-block">{{ form.password2.errors }}</span>
 				{% else %}
 					<br>
 				{% endif %}

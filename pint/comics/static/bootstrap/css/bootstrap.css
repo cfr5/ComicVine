@@ -6829,7 +6829,7 @@ button.close {
  	}
 }
 
-#id_username,#id_email,#id_password,#id_password1,#id_password2 {
+#id_username,#id_email,#id_password,#id_password1,#id_password2,#id_old_password,#id_new_password1,#id_new_password2{
   display: block;
   width: 100%;
   height: 34px;
@@ -6994,7 +6994,7 @@ Licensed under MIT
 }
 @import "http://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
 
-.mb20 { margin-bottom: 20px; } 
+.mb20 { margin-bottom: 20px; }
 
 hgroup { padding-left: 15px; border-bottom: 1px solid #ccc; }
 hgroup h1 { font: 500 normal 1.625em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin-top: 0; line-height: 1.15; }
@@ -7008,7 +7008,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 .search-result ul li { font: 400 normal .85em "Roboto",Arial,Verdana,sans-serif;  line-height: 30px; }
 .search-result ul li i { padding-right: 5px; }
 .search-result .col-md-7 { position: relative; }
-.search-result p { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; } 
+.search-result p { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; }
 .search-result span.minus { position: absolute; right: 0; top: 126px; }
 .search-result span.minus a { background-color: #FF3737; padding: 5px 5px 3px 5px; }
 .search-result span.minus a:hover { background-color: #414141; }
